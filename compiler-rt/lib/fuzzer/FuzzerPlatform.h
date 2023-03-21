@@ -87,6 +87,16 @@
   (LIBFUZZER_APPLE || LIBFUZZER_LINUX || LIBFUZZER_NETBSD ||                   \
    LIBFUZZER_FREEBSD || LIBFUZZER_EMSCRIPTEN)
 
+// In Windows and Fuchsia, Alarm callback is executed by a different thread.
+// NetBSD's current behavior needs this change too.
+#ifndef LIBFUZZER_ALARM_CALLBACK_SAME_THREAD
+#if !LIBFUZZER_WINDOWS && !LIBFUZZER_NETBSD && !LIBFUZZER_FUCHSIA
+#define LIBFUZZER_ALARM_CALLBACK_SAME_THREAD 1
+#else
+#define LIBFUZZER_ALARM_CALLBACK_SAME_THREAD 0
+#endif
+#endif
+
 #ifdef __x86_64
 #if __has_attribute(target)
 #define ATTRIBUTE_TARGET_POPCNT __attribute__((target("popcnt")))
